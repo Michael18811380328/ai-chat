@@ -25,7 +25,7 @@ const App = () => {
       .catch(err => console.error('获取对话列表失败:', err));
   }, []);
 
-  // 切换当前对话时加载历史消息并建立WebSocket连接
+  // 切换当前对话时，加载历史消息，并建立新的 WebSocket 连接
   useEffect(() => {
     if (!currentConversationId) return;
 
@@ -40,7 +40,7 @@ const App = () => {
       ws.close();
     }
 
-    // 建立新的WebSocket连接
+    // 建立新的 WebSocket 连接
     const newWs = new WebSocket(`ws://localhost:3000/conversationId=${currentConversationId}`);
     
     newWs.onopen = () => {

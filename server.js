@@ -66,7 +66,6 @@ const wss = new WebSocket.Server({
 // 存储WebSocket连接与对话ID的映射
 const conversationConnections = new Map();
 
-// 增加 app.get ping 机制
 app.get('/api/ping', (req, res) => {
   res.send('pong');
 });
@@ -126,7 +125,6 @@ app.get('/api/conversations/:id/history', async (req, res) => {
 
 // WebSocket连接处理
 wss.on('connection', async (ws, req) => {
-  // 替换 console.log
   logger.info('新的WebSocket连接');
   
   // 从查询参数中获取对话ID
@@ -134,7 +132,6 @@ wss.on('connection', async (ws, req) => {
   const conversationId = params.get('conversationId');
 
   if (!conversationId) {
-    // 替换 console.log
     logger.warn('连接被拒绝: 缺少对话ID');
     // ws.close(1008, '缺少对话ID');
     return;
@@ -144,7 +141,6 @@ wss.on('connection', async (ws, req) => {
   try {
     const conversation = await conversationService.getConversationById(conversationId);
     if (!conversation) {
-      // 替换 console.log
       logger.warn('连接被拒绝: 对话不存在，ID:', conversationId);
       ws.close(1008, '对话不存在');
       return;
@@ -152,7 +148,6 @@ wss.on('connection', async (ws, req) => {
     
     // 存储连接与对话ID的映射
     conversationConnections.set(conversationId, ws);
-    // 替换 console.log
     logger.info(`对话 ${conversationId} 已建立连接`);
     
     // 发送连接成功消息给客户端
@@ -205,7 +200,6 @@ wss.on('connection', async (ws, req) => {
         }));
         
       } catch (error) {
-        // 替换 console.error
         logger.error('处理消息错误:', error);
         ws.send(JSON.stringify({
           type: 'error',
@@ -216,13 +210,11 @@ wss.on('connection', async (ws, req) => {
     
     // 连接关闭时清理
     ws.on('close', () => {
-      // 替换 console.log
       logger.info(`对话 ${conversationId} 连接已关闭`);
       conversationConnections.delete(conversationId);
     });
     
   } catch (error) {
-    // 替换 console.error
     logger.error('验证对话时出错:', error);
     ws.close(1011, '服务器内部错误');
   }
@@ -233,14 +225,11 @@ const PORT = process.env.PORT || 3000;
 
 sequelize.sync()
   .then(() => {
-    // 替换 console.log
     logger.info('数据库模型已同步');
     server.listen(PORT, () => {
-      // 替换 console.log
       logger.info(`服务器运行在 http://localhost:${PORT}`);
     });
   })
   .catch(error => {
-    // 替换 console.error
     logger.error('同步数据库模型失败:', error);
   });
